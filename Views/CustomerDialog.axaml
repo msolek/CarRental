@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CarManagement.Views.CustomerDialog"
+        Width="470" Height="530"
+        Title="Customer Details">
+
+  <Border Margin="4" Padding="20" CornerRadius="8">
+    <StackPanel>
+      <TextBlock Text="Customer Information" FontSize="18" FontWeight="Bold" Margin="0,0,0,20" Foreground="#1A1A1A"/>
+
+      <TextBlock Text="Name *" Margin="0,8,0,4" FontWeight="SemiBold" FontSize="13"/>
+      <TextBox Text="{Binding Customer.Name}" Watermark="Customer name"/>
+
+      <TextBlock Text="Phone" Margin="0,12,0,4" FontWeight="SemiBold" FontSize="13"/>
+      <TextBox Text="{Binding Customer.Phone}" Watermark="e.g. 555-0101"/>
+
+      <TextBlock Text="Email" Margin="0,12,0,4" FontWeight="SemiBold" FontSize="13"/>
+      <TextBox Text="{Binding Customer.Email}" Watermark="e.g. customer@email.com"/>
+
+      <TextBlock Text="Address" Margin="0,12,0,4" FontWeight="SemiBold" FontSize="13"/>
+      <TextBox Text="{Binding Customer.Address}" Watermark="Street address, City"/>
+
+      <TextBlock Text="Notes" Margin="0,12,0,4" FontWeight="SemiBold" FontSize="13"/>
+      <TextBox Text="{Binding Customer.Notes}"
+               Watermark="Additional notes..."
+               AcceptsReturn="True"
+               TextWrapping="Wrap"
+               Height="100"/>
+
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,28,0,0" Spacing="10">
+        <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100"/>
+        <Button Content="OK" Classes="accent" Command="{Binding OkCommand}" Width="100"/>
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</Window>

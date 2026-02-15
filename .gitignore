@@ -1,0 +1,30 @@
+# Build output
+bin/
+obj/
+publish/
+
+# NuGet
+/packages/
+
+# IDE - JetBrains Rider
+.idea/
+riderModule.iml
+/_ReSharper.Caches/
+*.DotSettings.user
+
+# IDE - Visual Studio
+.vs/
+*.suo
+*.user
+
+# Test results
+TestResults/
+
+# Databases
+*.db
+*.db-shm
+*.db-wal
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,139 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CarManagement.ViewModels"
+        xmlns:conv="using:CarManagement.Converters"
+        xmlns:models="using:CarManagement.Models"
+        x:Class="CarManagement.Views.MainWindow"
+        Title="Car Management System"
+        Width="1400" Height="800">
+
+  <Window.Resources>
+    <conv:AvailabilityToBrushConverter x:Key="AvailabilityToBrush"/>
+    <conv:AvailabilityToTextConverter x:Key="AvailabilityToText"/>
+  </Window.Resources>
+
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
+
+  <TabControl Margin="8">
+    <!-- Car Management Tab -->
+    <TabItem Header="Cars">
+      <Grid RowDefinitions="Auto,*" Margin="4">
+        <!-- Header bar -->
+        <Border Padding="16,12" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Margin="0,0,0,4">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <TextBlock Text="Car Inventory" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" Foreground="#1A1A1A"/>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+              <Button Content="Add Car" Classes="accent" Command="{Binding AddCommand}"/>
+              <Button Content="Edit Car" Command="{Binding EditCommand}"/>
+              <Button Content="Delete Car" Classes="danger" Command="{Binding DeleteCommand}"/>
+
+              <Border Width="1" Background="#D0D0D0" Margin="8,4"/>
+
+              <Button Content="Rent Car" Classes="success" Command="{Binding RentCommand}"/>
+              <Button Content="Return Car" Classes="warning" Command="{Binding ReturnCommand}"/>
+            </StackPanel>
+          </Grid>
+        </Border>
+
+        <DataGrid Grid.Row="1" Margin="12"
+                  ItemsSource="{Binding Cars}"
+                  SelectedItem="{Binding SelectedCar}"
+                  IsReadOnly="True"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="ID" Width="90" Binding="{Binding Id}"/>
+            <DataGridTextColumn Header="Brand" Width="160" Binding="{Binding Brand}"/>
+            <DataGridTextColumn Header="Model" Width="160" Binding="{Binding Model}"/>
+            <DataGridTextColumn Header="Year" Width="90" Binding="{Binding Year}"/>
+            <DataGridTextColumn Header="Price/Day" Width="150" Binding="{Binding RentalPricePerDay, StringFormat='{}{0:F2} PLN'}"/>
+            <DataGridTemplateColumn Header="Status" Width="200">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate DataType="models:Car">
+                  <Border CornerRadius="10" Padding="10,3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding IsAvailable, Converter={StaticResource AvailabilityToText}}"
+                               Foreground="{Binding IsAvailable, Converter={StaticResource AvailabilityToBrush}}"
+                               FontWeight="SemiBold" FontSize="12"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                  </Border>
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+          </DataGrid.Columns>
+        </DataGrid>
+      </Grid>
+    </TabItem>
+
+    <!-- Rental History Tab -->
+    <TabItem Header="Rental History">
+      <Grid RowDefinitions="Auto,*" Margin="4">
+        <Border Padding="16,12" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Margin="0,0,0,4">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <TextBlock Text="Rental History" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" Foreground="#1A1A1A"/>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+              <Button Content="Refresh" Command="{Binding ViewRentalsCommand}"/>
+            </StackPanel>
+          </Grid>
+        </Border>
+
+        <DataGrid Grid.Row="1" Margin="12"
+                  ItemsSource="{Binding RentalHistories}"
+                  IsReadOnly="True"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True">
+          <!-- Mode=OneWay is required here: DataGridTextColumn defaults to TwoWay, but these are read-only properties -->
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="ID" Width="90" Binding="{Binding Id, Mode=OneWay}"/>
+            <DataGridTextColumn Header="Brand" Width="120" Binding="{Binding Car.Brand, Mode=OneWay}"/>
+            <DataGridTextColumn Header="Model" Width="120" Binding="{Binding Car.Model, Mode=OneWay}"/>
+            <DataGridTextColumn Header="Customer" Width="130" Binding="{Binding CustomerName, Mode=OneWay}"/>
+            <DataGridTextColumn Header="Phone" Width="120" Binding="{Binding CustomerPhone, Mode=OneWay}"/>
+            <DataGridTextColumn Header="Email" Width="140" Binding="{Binding CustomerEmail, Mode=OneWay}"/>
+            <DataGridTextColumn Header="Rental Date" Width="130" Binding="{Binding RentalDate, StringFormat='{}{0:MM/dd/yyyy}', Mode=OneWay}"/>
+            <DataGridTextColumn Header="Return Date" Width="130" Binding="{Binding ReturnDate, StringFormat='{}{0:MM/dd/yyyy}', Mode=OneWay}"/>
+            <DataGridTextColumn Header="Days" Width="80" Binding="{Binding RentalDays, Mode=OneWay}"/>
+            <DataGridTextColumn Header="Cost" Width="*" Binding="{Binding RentalCost, StringFormat='{}{0:F2} PLN', Mode=OneWay}"/>
+          </DataGrid.Columns>
+        </DataGrid>
+      </Grid>
+    </TabItem>
+
+    <!-- Customer Management Tab -->
+    <TabItem Header="Customers">
+      <Grid RowDefinitions="Auto,*" Margin="4">
+        <Border Padding="16,12" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Margin="0,0,0,4">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <TextBlock Text="Customer Management" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" Foreground="#1A1A1A"/>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+              <Button Content="Add Customer" Classes="accent" Command="{Binding AddCustomerCommand}"/>
+              <Button Content="Edit Customer" Command="{Binding EditCustomerCommand}"/>
+              <Button Content="Delete Customer" Classes="danger" Command="{Binding DeleteCustomerCommand}"/>
+            </StackPanel>
+          </Grid>
+        </Border>
+
+        <DataGrid Grid.Row="1" Margin="12"
+                  ItemsSource="{Binding Customers}"
+                  SelectedItem="{Binding SelectedCustomer}"
+                  IsReadOnly="True"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="ID" Width="90" Binding="{Binding Id}"/>
+            <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}"/>
+            <DataGridTextColumn Header="Phone" Width="120" Binding="{Binding Phone}"/>
+            <DataGridTextColumn Header="Email" Width="200" Binding="{Binding Email}"/>
+            <DataGridTextColumn Header="Address" Width="250" Binding="{Binding Address}"/>
+            <DataGridTextColumn Header="Notes" Width="*" Binding="{Binding Notes}"/>
+          </DataGrid.Columns>
+        </DataGrid>
+      </Grid>
+    </TabItem>
+  </TabControl>
+</Window>
